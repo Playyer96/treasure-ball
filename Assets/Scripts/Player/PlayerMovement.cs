@@ -44,6 +44,17 @@ public class PlayerMovement : MonoBehaviour
     public float JetpackStartDelay { get => jetpackStartDelay; set => jetpackStartDelay = value; }
     public float MinFuelToStart { get => minFuelToStart; set => minFuelToStart = value; }
 
+    public delegate void OnFuelChange();
+    public static event OnFuelChange fuelChangeEvent;
+
+    // Rest of the code
+
+    private void UpdateFuel(float newFuel)
+    {
+        CurrentFuel = newFuel;
+        fuelChangeEvent?.Invoke();
+    }
+
     private void Start()
     {
         Rb = GetComponent<Rigidbody>();
@@ -99,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Rb.AddForce(Vector3.up * JetpackForce, ForceMode.Acceleration);
                     CurrentFuel -= DrainRate * Time.deltaTime;
+                    UpdateFuel(CurrentFuel);
                 }
 
             }
@@ -107,6 +119,7 @@ public class PlayerMovement : MonoBehaviour
         {
             CurrentFuel += RechargeRate * Time.deltaTime;
             CurrentFuel = Mathf.Min(CurrentFuel, FuelAmount);
+            UpdateFuel(CurrentFuel);
             JetpackStartTime = 0;
         }
     }
