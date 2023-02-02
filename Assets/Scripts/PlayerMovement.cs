@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField, Range(0, 10)] private float speed = 1;
+    [SerializeField, Range(0, 10)] private float speed = 500;
 
     [SerializeField, Range(0, 10)] private float jumpForce = 3;
 
@@ -16,10 +18,17 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField, Range(0, 10)] private float fuelAmount = 1;
 
+    [SerializeField, Range(0, 5)] private float jetpackStartDelay = 1f;
+
+    [SerializeField, Range(0, 100)] private float minFuelToStart = 30;
+
     private Rigidbody rb;
     private bool isGrounded = true;
-    private bool isUsingJetpack = false;
-    private float currentFuel;
+    private float isUsingJetpack;
+    private float jetpackStartTime = 0f;
+    public float currentFuel;
+
+    Vector2 _movement;
 
     public float CurrentFuel { get => currentFuel; set => currentFuel = value; }
 
@@ -29,44 +38,64 @@ public class PlayerMovement : MonoBehaviour
         currentFuel = fuelAmount;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        CheckGround();
+        MovePlayer();
+        Jumppack();
+    }
 
-        Vector3 movement = new Vector3(horizontal, 0, vertical) * speed * Time.deltaTime;
-        rb.MovePosition(rb.position + movement);
+    public void OnMovement(InputValue value) => _movement = value.Get<Vector2>();
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isUsingJetpack)
+    public void MovePlayer()
+    {
+        Vector3 movement = new Vector3(_movement.x, 0f, _movement.y);
+
+        rb.MovePosition(rb.position + (movement * speed * Time.deltaTime));
+    }
+
+    public void OnJump(InputValue value) => isUsingJetpack = value.Get<float>();
+
+    void CheckGround()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, 1f))
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground");
+        }
+        else
+        {
             isGrounded = false;
         }
-        else if (Input.GetKey(KeyCode.Space) && !isUsingJetpack && currentFuel > 0)
+    }
+
+    void Jumppack()
+    {
+        if (isUsingJetpack > 0f)
         {
-            rb.AddForce(Vector3.up * jetpackForce, ForceMode.Acceleration);
-            currentFuel -= drainRate * Time.deltaTime;
+            if (isGrounded)
+            {
+                if (currentFuel >= fuelAmount * 0.3f)
+                {
+                    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                    isGrounded = false;
+                    currentFuel -= drainRate * Time.deltaTime;
+                }
+            }
+            else if (Time.time - jetpackStartTime >= jetpackStartDelay && currentFuel > 0)
+            {
+                rb.AddForce(Vector3.up * jetpackForce, ForceMode.Acceleration);
+                currentFuel -= drainRate * Time.deltaTime;
+            }
+            else
+            {
+                jetpackStartTime = Time.time;
+            }
         }
         else
         {
             currentFuel += rechargeRate * Time.deltaTime;
             currentFuel = Mathf.Min(currentFuel, fuelAmount);
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            isGrounded = true;
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            isGrounded = false;
         }
     }
 }
