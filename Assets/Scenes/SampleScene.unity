@@ -256,13 +256,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   jumpForce: 3
-  jetpackForce: 0.2
+  jetpackForce: 10
   rechargeRate: 1
   drainRate: 3.42
   fuelAmount: 10
   jetpackStartDelay: 1
   minFuelToStart: 30
+  rb: {fileID: 0}
+  isGrounded: 1
+  isUsingJetpack: 0
+  jetpackStartTime: 0
   currentFuel: 0
+  _movement: {x: 0, y: 0}
 --- !u!135 &242433949
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -334,7 +339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 242433947}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.46, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
