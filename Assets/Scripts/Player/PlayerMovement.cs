@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         Rb.MovePosition(Rb.position + (movement * speed * Time.deltaTime));
     }
 
-    public void OnJump(InputValue value) => speed = value.Get<float>();
+    public void OnJump(InputValue value) => IsUsingJetpack = value.Get<float>();
 
     public void CheckGround()
     {
@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
             CurrentFuel += rechargeRate * Time.deltaTime;
             CurrentFuel = Mathf.Min(CurrentFuel, fuelAmount);
             UpdateFuel(CurrentFuel);
-            jetpackForce = 0;
+            jetpackStartTime = 0;
         }
     }
 }

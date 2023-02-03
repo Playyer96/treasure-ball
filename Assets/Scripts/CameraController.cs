@@ -6,8 +6,6 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField, Range(0f, 20f)]
     private float distance = 10f;
-    [SerializeField, Range(0f, 20f)]
-    private float speed = 10f;
     private Transform target;
 
     private void Start()
@@ -15,14 +13,15 @@ public class CameraController : MonoBehaviour
         target = GameObject.FindWithTag("Player").transform;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         float targetZ = target.position.z - distance;
         float targetX = target.position.x;
         float targetY = target.position.y + distance;
 
         Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * speed);
+        float speed = (targetPosition - transform.position).magnitude * Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, speed);
 
         transform.LookAt(target);
     }
