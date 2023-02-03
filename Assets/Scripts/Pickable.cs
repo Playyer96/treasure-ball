@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public abstract class Pickupable : MonoBehaviour
+public abstract class Pickable : MonoBehaviour
 {
-    public abstract void Pickup();
+    public virtual void Pickup()
+    {
+        Destroy(this.gameObject);
+    }
 
     public virtual void OnTriggerEnter(Collider other)
     {
