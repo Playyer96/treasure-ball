@@ -256,10 +256,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   jumpForce: 3
-  jetpackForce: 1
+  jetpackForce: 10
   rechargeRate: 1
   drainRate: 2
-  fuelAmount: 1
+  fuelAmount: 10
   jetpackStartDelay: 1
   minFuelToStart: 0.3
 --- !u!135 &242433949
@@ -828,6 +828,7 @@ GameObject:
   - component: {fileID: 1261387933}
   - component: {fileID: 1261387932}
   - component: {fileID: 1261387931}
+  - component: {fileID: 1261387935}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -917,3 +918,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1261387935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261387930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e973fa9b65a42b4fb687fd41c5af53a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fuelBar: {fileID: 385629615}
+  fuelColors:
+  - {r: 1, g: 0.09307521, b: 0, a: 1}
+  - {r: 1, g: 0.84616494, b: 0, a: 1}
+  - {r: 0.6348463, g: 1, b: 0, a: 1}
+  - {r: 0.27058825, g: 1, b: 0, a: 1}
+  playerMovement: {fileID: 0}

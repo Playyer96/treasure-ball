@@ -3,24 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// The `PlayerMovement` script adds player movement and jump pack functionality to the player game object 
+/// </summary>
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField, Range(0, 10)] private float speed = 5;
+    [Header("Sphere Movement Properties")]
 
-    [SerializeField, Range(0, 10)] private float jumpForce = 3;
+    [Range(0, 10)] public float speed = 5;
 
-    [SerializeField, Range(0, 10)] private float jetpackForce = 1;
+    [Range(0, 10)] public float jumpForce = 3;
 
-    [SerializeField, Range(0, 10)] private float rechargeRate = 1;
+    [Header("Jetpack Properties")]
 
-    [SerializeField, Range(0, 5)] private float drainRate = 2f;
+    [Range(0, 10)] public float jetpackForce = 1;
 
-    [SerializeField, Range(0, 10)] private float fuelAmount = 1;
+    [Range(0, 10)] public float rechargeRate = 1;
 
-    [SerializeField, Range(0, 5)] private float jetpackStartDelay = 1f;
+    [Range(0, 5)] public float drainRate = 2f;
 
-    [SerializeField, Range(0, 1)] private float minFuelToStart = 0.3f;
+    [Range(0, 10)] public float fuelAmount = 1;
+
+    [Range(0, 5)] public float jetpackStartDelay = 1f;
+
+    [Range(0, 1)] public float minFuelToStart = 0.3f;
 
     private Rigidbody rb;
     private bool isGrounded = true;
@@ -35,19 +42,9 @@ public class PlayerMovement : MonoBehaviour
     public float JetpackStartTime { get => jetpackStartTime; set => jetpackStartTime = value; }
     public float CurrentFuel { get => currentFuel; set => currentFuel = value; }
     public Vector2 Movement { get => _movement; set => _movement = value; }
-    public float Speed { get => speed; set => speed = value; }
-    public float JumpForce { get => jumpForce; set => jumpForce = value; }
-    public float JetpackForce { get => jetpackForce; set => jetpackForce = value; }
-    public float RechargeRate { get => rechargeRate; set => rechargeRate = value; }
-    public float DrainRate { get => drainRate; set => drainRate = value; }
-    public float FuelAmount { get => fuelAmount; set => fuelAmount = value; }
-    public float JetpackStartDelay { get => jetpackStartDelay; set => jetpackStartDelay = value; }
-    public float MinFuelToStart { get => minFuelToStart; set => minFuelToStart = value; }
 
     public delegate void OnFuelChange();
     public static event OnFuelChange fuelChangeEvent;
-
-    // Rest of the code
 
     private void UpdateFuel(float newFuel)
     {
@@ -58,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         Rb = GetComponent<Rigidbody>();
-        CurrentFuel = FuelAmount;
+        CurrentFuel = fuelAmount;
     }
 
     private void FixedUpdate()
@@ -74,10 +71,10 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 movement = new Vector3(Movement.x, 0f, Movement.y);
 
-        Rb.MovePosition(Rb.position + (movement * Speed * Time.deltaTime));
+        Rb.MovePosition(Rb.position + (movement * speed * Time.deltaTime));
     }
 
-    public void OnJump(InputValue value) => IsUsingJetpack = value.Get<float>();
+    public void OnJump(InputValue value) => speed = value.Get<float>();
 
     public void CheckGround()
     {
@@ -98,18 +95,18 @@ public class PlayerMovement : MonoBehaviour
         {
             if (IsGrounded)
             {
-                if (CurrentFuel >= FuelAmount * MinFuelToStart)
+                if (CurrentFuel >= fuelAmount * minFuelToStart)
                 {
-                    Rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+                    Rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                     IsGrounded = false;
                 }
             }
             else
             {
-                if (Time.time - JetpackStartTime >= JetpackStartDelay && CurrentFuel > 0)
+                if (Time.time - JetpackStartTime >= jetpackStartDelay && CurrentFuel > 0)
                 {
-                    Rb.AddForce(Vector3.up * JetpackForce, ForceMode.Acceleration);
-                    CurrentFuel -= DrainRate * Time.deltaTime;
+                    Rb.AddForce(Vector3.up * jetpackForce, ForceMode.Acceleration);
+                    CurrentFuel -= drainRate * Time.deltaTime;
                     UpdateFuel(CurrentFuel);
                 }
 
@@ -117,10 +114,10 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            CurrentFuel += RechargeRate * Time.deltaTime;
-            CurrentFuel = Mathf.Min(CurrentFuel, FuelAmount);
+            CurrentFuel += rechargeRate * Time.deltaTime;
+            CurrentFuel = Mathf.Min(CurrentFuel, fuelAmount);
             UpdateFuel(CurrentFuel);
-            JetpackStartTime = 0;
+            jetpackForce = 0;
         }
     }
 }

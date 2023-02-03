@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
     private void UpdateFuelBar()
     {
         // Calculate the current fuel percentage
-        float currentFuelPercent = playerMovement.CurrentFuel / playerMovement.FuelAmount;
+        float currentFuelPercent = playerMovement.CurrentFuel / playerMovement.fuelAmount;
 
         // Update the fill amount of the fuel bar
         fuelBar.fillAmount = currentFuelPercent;
