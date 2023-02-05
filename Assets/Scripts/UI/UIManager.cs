@@ -6,12 +6,20 @@ public class UIManager : MonoBehaviour
     // Image component to display the fuel bar
     [SerializeField] private Image fuelBar;
 
+    [SerializeField] private GameObject inputNewScoreUI;
+    [SerializeField] private GameObject leaderboardUI;
+    [SerializeField] private Leaderboard _leaderboard;
+    [SerializeField] private Button summitButton;
+    
     // Array of colors to use for different fuel levels
     [SerializeField] private Color[] fuelColors;
 
     // Reference to the player movement script
     [SerializeField] private PlayerMovement playerMovement;
 
+    private int _score;
+    private float _time;
+    
     private void Start()
     {
         if (!playerMovement)
@@ -19,6 +27,8 @@ public class UIManager : MonoBehaviour
             // Get the player movement component from the object with "Player" tag
             playerMovement = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
         }
+        
+        summitButton.onClick.AddListener(SummitButton);
     }
 
     private void OnEnable()
@@ -48,5 +58,29 @@ public class UIManager : MonoBehaviour
 
         // Lerp the color of the fuel bar to the determined color
         fuelBar.color = Color.Lerp(fuelBar.color, colorToLerpTo, Time.deltaTime * 5f);
+    }
+
+    public void ShowInputNewScore(bool value)
+    {
+        inputNewScoreUI.SetActive(value);
+    }
+
+    public void ShowLeaderboard(bool value)
+    {
+        leaderboardUI.SetActive(value);
+    }
+
+    public void SummitNewScore(int score, float time)
+    {
+        _score = score;
+        _time = time;
+    }
+
+    public void SummitButton()
+    {
+        ShowInputNewScore(false);
+        _leaderboard.UpdateUI();
+        ShowLeaderboard(true);
+        _leaderboard.AddNewScore(_score, _time);
     }
 }

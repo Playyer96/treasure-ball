@@ -6,6 +6,9 @@ public class Key : Pickable
 {
     public override void Pickup()
     {
-        base.Pickup();
+        GameManager gameManager = GameManager.Instance;
+        gameManager.CollectKey();
+        
+        Destroy(this.gameObject);
     }
 }

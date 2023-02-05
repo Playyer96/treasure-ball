@@ -4,6 +4,9 @@ public abstract class Pickable : MonoBehaviour
 {
     public virtual void Pickup()
     {
+        GameManager gameManager = GameManager.Instance;
+        gameManager.CollectCoin();
+        
         Destroy(this.gameObject);
     }
 
