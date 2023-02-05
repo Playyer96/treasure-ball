@@ -9,40 +9,39 @@ public class PlayerMovementTests
     [SetUp]
     public void SetUp()
     {
-        // Arrange
-        GameObject ground = new GameObject();
-        ground.AddComponent<BoxCollider>();
-        ground.layer = LayerMask.NameToLayer("Ground");
         rigidbody = new GameObject().AddComponent<Rigidbody>();
         playerMovement = new GameObject().AddComponent<PlayerMovement>();
         playerMovement.Rb = rigidbody;
         playerMovement.CurrentFuel = playerMovement.fuelAmount;
         playerMovement.IsUsingJetpack = 1f;
+
+        playerMovement.speed = 5f;
+        playerMovement.jumpForce = 3f;
+        playerMovement.jetpackForce = 1f;
+        playerMovement.rechargeRate = 1f;
+        playerMovement.drainRate = 2f;
+        playerMovement.fuelAmount = 1f;
+        playerMovement.jetpackStartDelay = 1f;
+        playerMovement.minFuelToStart = 0.3f;
+    }
+    
+    [Test]
+    public void UpdateFuel_ShouldInvokeFuelChangeEvent()
+    {
+        bool eventInvoked = false;
+        PlayerMovement.fuelChangeEvent += () => { eventInvoked = true; };
+
+        playerMovement.UpdateFuel(0.5f);
+
+        Assert.IsTrue(eventInvoked);
     }
 
     [Test]
-    public void Jumppack_WhenGroundedAndFuelIsEnough_AddsImpulseToRigidbody()
+    public void UpdateFuel_ShouldUpdateFuelAmount()
     {
-        playerMovement.IsGrounded = true;
-        playerMovement.IsUsingJetpack = 1f;
+        playerMovement.UpdateFuel(0.5f);
 
-        playerMovement.Jumppack();
-
-        //Assert.AreEqual(rigidbody.velocity.y, playerMovement.jumpForce);
-        Assert.AreEqual(playerMovement.CurrentFuel, playerMovement.fuelAmount - playerMovement.drainRate * Time.deltaTime);
-    }
-
-    [Test]
-    public void Jumppack_WhenInAirAndFuelIsEnough_AddsForceToRigidbody()
-    {
-        playerMovement.IsGrounded = false;
-        playerMovement.JetpackStartTime = Time.time - playerMovement.jetpackStartDelay + 1f;
-        playerMovement.IsUsingJetpack = 1f;
-
-        playerMovement.Jumppack();
-
-        //Assert.AreEqual(rigidbody.velocity.y, playerMovement.jetpackForce);
-        Assert.AreEqual(playerMovement.CurrentFuel, playerMovement.fuelAmount - playerMovement.drainRate * Time.deltaTime);
+        Assert.AreEqual(0.5f, playerMovement.CurrentFuel);
     }
 
     [Test]

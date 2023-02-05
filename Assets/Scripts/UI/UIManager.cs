@@ -7,6 +7,41 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image fuelBar;
 
     [SerializeField] private GameObject inputNewScoreUI;
+
+    public Image FuelBar
+    {
+        get => fuelBar;
+        set => fuelBar = value;
+    }
+
+    public GameObject InputNewScoreUI
+    {
+        get => inputNewScoreUI;
+        set => inputNewScoreUI = value;
+    }
+
+    public GameObject LeaderboardUI
+    {
+        get => leaderboardUI;
+        set => leaderboardUI = value;
+    }
+
+    public Button SummitButton1 => summitButton;
+
+    public Color[] FuelColors
+    {
+        get => fuelColors;
+        set => fuelColors = value;
+    }
+
+    public PlayerMovement PlayerMovement
+    {
+        get => playerMovement;
+        set => playerMovement = value;
+    }
+
+    public int Score => _score;
+
     [SerializeField] private GameObject leaderboardUI;
     [SerializeField] private Leaderboard _leaderboard;
 
@@ -22,7 +57,9 @@ public class UIManager : MonoBehaviour
 
     private int _score;
     private float _time;
-    
+
+    public float time => _time;
+
     private void Start()
     {
         if (!playerMovement)
@@ -46,7 +83,7 @@ public class UIManager : MonoBehaviour
         PlayerMovement.fuelChangeEvent -= UpdateFuelBar;
     }
 
-    private void UpdateFuelBar()
+    public void UpdateFuelBar()
     {
         // Calculate the current fuel percentage
         float currentFuelPercent = playerMovement.CurrentFuel / playerMovement.fuelAmount;

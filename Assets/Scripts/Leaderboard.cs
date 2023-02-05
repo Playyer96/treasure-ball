@@ -5,17 +5,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// Leaderboard class manages the storage and display of high scores.
+/// </summary>
 public class Leaderboard : MonoBehaviour
 {
     public int maxScores = 10;
     private string leaderboardKey = "leaderboard";
-    public TMP_InputField nameInputField;
+    [SerializeField] private TMP_InputField nameInputField;
     public TextMeshProUGUI[] scoreTexts;
+
     private List<Score> scores;
 
-    public int HighestScore { get; private set; }
+    public int HighestScore { get; private set; }    // The highest score in the leaderboard.
 
-    private string name;
+    private string _name;
 
     private void Start()
     {
@@ -23,6 +27,9 @@ public class Leaderboard : MonoBehaviour
         LoadScores();
     }
 
+    /// <summary>
+    /// Loads scores from the player prefs.
+    /// </summary>
     private void LoadScores()
     {
         string json = PlayerPrefs.GetString(leaderboardKey, string.Empty);
@@ -34,6 +41,11 @@ public class Leaderboard : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds a new score to the leaderboard.
+    /// </summary>
+    /// <param name="score">The score to be added.</param>
+    /// <param name="time">The time associated with the score.</param>
     public void AddNewScore(int score, float time)
     {
          name = nameInputField.text;
@@ -67,6 +79,9 @@ public class Leaderboard : MonoBehaviour
         UpdateUI();
     }
 
+    /// <summary>
+    /// Updates the scores displayed in the UI.
+    /// </summary>
     public void UpdateUI()
     {
         for (int i = 0; i < scoreTexts.Length; i++)

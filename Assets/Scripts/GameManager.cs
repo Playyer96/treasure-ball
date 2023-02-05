@@ -1,28 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// GameManager class handles the game logic and events.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int coinValue = 10;
+
     [SerializeField] private int keyValue = 50;
+
     [SerializeField] private int totalPoints;
+
     
-    private bool treasureOpened = false;
+    [SerializeField] private UIManager _uiManager; // Reference to UIManager component
+    
+
+    private bool treasureOpened = false; // Flag to check if the treasure has been opened
 
     private float startTime;
-    private float currentTime;
+
+    private float currentTime; // Current time elapsed since the start of the game
+    
     private int coinsCollected;
+
     private int keysCollected;
+
     public int totalCollected;
 
-    [SerializeField]private UIManager _uiManager;
+    private Coin[] coins; // Array of coins in the scene
 
-    private Coin[] coins;
-    private Key[] keys;
+    private Key[] keys; // Array of keys in the scene
     
-    private static GameManager _instance;
+    private Leaderboard _leaderboard; // Reference to the leaderboard component    
+    private static GameManager _instance; // Singleton instance of the GameManager class
+    
+    public int CoinValue
+    {
+        get => coinValue;
+        set => coinValue = value;
+    }
 
+    public int KeyValue
+    {
+        get => keyValue;
+        set => keyValue = value;
+    }
+
+    public int CoinsCollected
+    {
+        get => coinsCollected;
+        set => coinsCollected = value;
+    }
+
+    public int KeysCollected
+    {
+        get => keysCollected;
+        set => keysCollected = value;
+    }
+    
+    // Gets the singleton instance of the GameManager class
     public static GameManager Instance
     {
         get
@@ -36,16 +72,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Leaderboard _leaderboard;
-
     private void Start()
     {
         if (!_uiManager)
             _uiManager = FindObjectOfType<UIManager>();
-        
+
         coins = FindObjectsOfType<Coin>();
         keys = FindObjectsOfType<Key>();
-        
+
         startTime = Time.time;
         totalPoints = (coinValue * coins.Length) + (keyValue * keys.Length);
     }
@@ -60,18 +94,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Increments the count of collected coins by `coinValue`
+    /// </summary>
     public void CollectCoin()
     {
         coinsCollected += coinValue;
         totalCollected = coinsCollected + keysCollected;
     }
 
+    /// <summary>
+    /// CollectKey is a public function that adds the value of a key (`keyValue`) to the total keys collected (`keysCollected`)
+    /// and updates the total collected (`totalCollected`) by adding the value of the coins collected (`coinsCollected`) and keys collected.
+    /// </summary>
     public void CollectKey()
     {
         keysCollected += keyValue;
         totalCollected = coinsCollected + keysCollected;
     }
 
+    /// <summary>
+    /// OpenTreasure is a public function that opens the treasure if it's not already opened.
+    /// It sets the value of `treasureOpened` to `true` to make sure the treasure is not opened again.
+    /// It also sets the `Time.timeScale` to 0, effectively pausing the game.
+    /// If the `_uiManager` is not assigned, it finds the `UIManager` in the scene.
+    /// If the total collected (`totalCollected`) is greater than or equal to the highest score in the leaderboard (`_uiManager.Leaderboard.HighestScore`),
+    /// it shows the input field to submit a new score and calls the `SummitNewScore` function on the `_uiManager` to submit the new score.
+    /// </summary>
     public void OpenTreasure()
     {
         if (treasureOpened) return;
@@ -89,7 +138,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            
+
         }
     }
 }
