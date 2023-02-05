@@ -13,6 +13,8 @@ public class Leaderboard : MonoBehaviour
     public TextMeshProUGUI[] scoreTexts;
     private List<Score> scores;
 
+    public int HighestScore { get; private set; }
+
     private string name;
 
     private void Start()
@@ -28,6 +30,7 @@ public class Leaderboard : MonoBehaviour
         {
             Score[] loadedScores = JsonUtility.FromJson<ScoreList>(json).scores;
             scores.AddRange(loadedScores);
+            HighestScore = scores[0].score;
         }
     }
 

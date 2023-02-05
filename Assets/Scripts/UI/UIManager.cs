@@ -9,6 +9,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject inputNewScoreUI;
     [SerializeField] private GameObject leaderboardUI;
     [SerializeField] private Leaderboard _leaderboard;
+
+    public Leaderboard Leaderboard => _leaderboard;
+
     [SerializeField] private Button summitButton;
     
     // Array of colors to use for different fuel levels

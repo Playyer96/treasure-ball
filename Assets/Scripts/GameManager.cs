@@ -49,14 +49,14 @@ public class GameManager : MonoBehaviour
         
         startTime = Time.time;
         totalPoints = (coinValue * coins.Length) + (keyValue * keys.Length);
-        requiredPoints = (int)(totalPoints * 0.75f);
+        requiredPoints = keyValue * keys.Length;
     }
 
     private void Update()
     {
         currentTime = Time.time - startTime;
 
-        if (totalCollected >= requiredPoints)
+        if (keysCollected >= keys.Length)
         {
             OpenTreasure();
         }
@@ -83,8 +83,15 @@ public class GameManager : MonoBehaviour
 
         if (!_uiManager)
             _uiManager = FindObjectOfType<UIManager>();
-        
-        _uiManager.ShowInputNewScore(true);
-        _uiManager.SummitNewScore(totalCollected, currentTime);
+
+        if (totalCollected >= _uiManager.Leaderboard.HighestScore)
+        {
+            _uiManager.ShowInputNewScore(true);
+            _uiManager.SummitNewScore(totalCollected, currentTime);
+        }
+        else
+        {
+            
+        }
     }
 }
