@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int keyValue = 50;
     [SerializeField] private int totalPoints;
     
-    private int requiredPoints;
     private bool treasureOpened = false;
 
     private float startTime;
@@ -49,7 +48,6 @@ public class GameManager : MonoBehaviour
         
         startTime = Time.time;
         totalPoints = (coinValue * coins.Length) + (keyValue * keys.Length);
-        requiredPoints = keyValue * keys.Length;
     }
 
     private void Update()
@@ -74,7 +72,7 @@ public class GameManager : MonoBehaviour
         totalCollected = coinsCollected + keysCollected;
     }
 
-    private void OpenTreasure()
+    public void OpenTreasure()
     {
         if (treasureOpened) return;
 
