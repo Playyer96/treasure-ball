@@ -22,11 +22,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jetpack Properties")] [Range(0, 10)]
     public float jetpackForce = 1; // Force applied when using the jetpack
 
-    [Range(0, 10)] public float rechargeRate = 1; // Rate at which the jetpack recharges
-    [Range(0, 5)] public float drainRate = 2f; // Rate at which the jetpack drains fuel
-    [Range(0, 10)] public float fuelAmount = 1; // Total fuel available for the jetpack
-    [Range(0, 5)] public float jetpackStartDelay = 1f; // Delay before the jetpack can be used after jumping
-    [Range(0, 1)] public float minFuelToStart = 0.3f; // Minimum fuel needed to start the jetpack
+    [SerializeField, Range(0, 10)] private float rechargeRate = 1; // Rate at which the jetpack recharges
+    [SerializeField, Range(0, 5)] private float drainRate = 2f; // Rate at which the jetpack drains fuel
+    [SerializeField, Range(0, 10)] private float fuelAmount = 1; // Total fuel available for the jetpack
+
+    [SerializeField, Range(0, 5)] private float jetpackStartDelay = 1f; // Delay before the jetpack can be used after jumping
+    [SerializeField, Range(0, 1)] private float minFuelToStart = 0.3f; // Minimum fuel needed to start the jetpack
 
     // Variables to store the current state of the player
     private Rigidbody rb; // Rigidbody component of the player
@@ -72,6 +73,10 @@ public class PlayerMovement : MonoBehaviour
         get => _movement;
         set => _movement = value;
     }
+    
+    public float FuelAmount => fuelAmount;
+
+    public float JetpackStartDelay => jetpackStartDelay;
 
     // Delegate for events related to fuel change
     public delegate void OnFuelChange();
@@ -92,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         CurrentFuel = fuelAmount;
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         CheckGround();
         MovePlayer();
@@ -106,14 +111,21 @@ public class PlayerMovement : MonoBehaviour
     public void OnMovement(InputValue value) => Movement = value.Get<Vector2>();
 
     /// <summary>
-    /// This function moves the player based on the current movement vector.
+    /// This function moves the player based on the current movement vector and camera's facing direction.
     /// </summary>
     public void MovePlayer()
     {
-        Vector3 movement = new Vector3(Movement.x, 0f, Movement.y);
+        // Get the camera's facing direction
+        Vector3 cameraForward = Camera.main.transform.forward;
+        cameraForward.y = 0;
+        cameraForward = cameraForward.normalized;
+
+        // Calculate the movement direction based on the camera's facing direction and current movement input
+        Vector3 movement = cameraForward * Movement.y + Camera.main.transform.right * Movement.x;
 
         Rb.MovePosition(Rb.position + (movement * speed * Time.deltaTime));
     }
+
 
     /// <summary>
     /// This function updates the jetpack activation state.

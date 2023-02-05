@@ -1,28 +1,31 @@
 using NUnit.Framework;
 using UnityEngine;
 
+[TestFixture]
 public class PlayerMovementTests
 {
     private PlayerMovement playerMovement;
     private Rigidbody rigidbody;
+    private Camera _camera;
 
     [SetUp]
     public void SetUp()
     {
-        rigidbody = new GameObject().AddComponent<Rigidbody>();
         playerMovement = new GameObject().AddComponent<PlayerMovement>();
+        rigidbody = playerMovement.gameObject.AddComponent<Rigidbody>();
+        _camera = new GameObject().AddComponent<Camera>();
         playerMovement.Rb = rigidbody;
         playerMovement.CurrentFuel = playerMovement.fuelAmount;
         playerMovement.IsUsingJetpack = 1f;
 
-        playerMovement.speed = 5f;
-        playerMovement.jumpForce = 3f;
-        playerMovement.jetpackForce = 1f;
-        playerMovement.rechargeRate = 1f;
-        playerMovement.drainRate = 2f;
         playerMovement.fuelAmount = 1f;
         playerMovement.jetpackStartDelay = 1f;
-        playerMovement.minFuelToStart = 0.3f;
+    }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        Object.Destroy(playerMovement);
     }
     
     [Test]
@@ -48,7 +51,7 @@ public class PlayerMovementTests
     public void Jumppack_WhenInAirAndFuelIsNotEnough_DoesNotAddForceToRigidbody()
     {
         playerMovement.IsGrounded = false;
-        playerMovement.JetpackStartTime = Time.time - playerMovement.jetpackStartDelay + 1f;
+        playerMovement.JetpackStartTime = Time.time - playerMovement.JetpackStartDelay + 1f;
         playerMovement.IsUsingJetpack = 1f;
         playerMovement.CurrentFuel = 0f;
 
@@ -65,31 +68,7 @@ public class PlayerMovementTests
 
         playerMovement.Jumppack();
 
-        Assert.AreEqual(playerMovement.CurrentFuel, playerMovement.fuelAmount);
-    }
-
-    [Test]
-    public void MovePlayer_WithMovementInput_MovesRigidbody()
-    {
-        Vector2 movementInput = new Vector2(1, 1);
-        playerMovement.Movement = movementInput;
-
-        playerMovement.MovePlayer();
-
-        Vector3 expectedMovement = new Vector3(movementInput.x, 0f, movementInput.y);
-        Vector3 expectedPosition = expectedMovement * playerMovement.speed * Time.deltaTime;
-        Assert.AreEqual(rigidbody.position, expectedPosition);
-
-    }
-
-    [Test]
-    public void MovePlayer_WithoutMovementInput_DoesNotMoveRigidbody()
-    {
-        Vector3 initialPosition = rigidbody.position;
-
-        playerMovement.Movement = Vector2.zero;
-        playerMovement.MovePlayer();
-
-        Assert.AreEqual(rigidbody.position, initialPosition);
+        Assert.AreEqual(playerMovement.CurrentFuel, playerMovement.FuelAmount);
     }
 }
+

@@ -5,6 +5,22 @@ using UnityEngine;
 /// </summary>
 public abstract class Pickable : MonoBehaviour
 {
+    [SerializeField] private float spinSpeedMin = 50f;
+    [SerializeField] private float spinSpeedMax = 200f;
+
+    private float spinSpeed = 0f;
+
+    private void Start()
+    {
+        spinSpeed = Random.Range(spinSpeedMin, spinSpeedMax);
+        transform.Rotate(Vector3.up, Random.Range(0f, 360f));
+    }
+
+    private void Update()
+    {
+        transform.Rotate(Vector3.up, spinSpeed * Time.deltaTime);
+    }
+
     /// <summary>
     /// The Pickup method collects the coin and destroys the game object.
     /// </summary>
