@@ -75,6 +75,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // PlayerPrefs.DeleteAll();
+        Time.timeScale = 1;
+        
         if (!_uiManager)
             _uiManager = FindObjectOfType<UIManager>();
 
