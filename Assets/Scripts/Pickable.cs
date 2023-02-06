@@ -31,6 +31,7 @@ public abstract class Pickable : MonoBehaviour
 
         // Call the CollectCoin method from the game manager
         gameManager.CollectCoin();
+        UIManager.onScoreUpdate();
 
         // Destroy the game object
         Destroy(this.gameObject);

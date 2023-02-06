@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// GameManager class handles the game logic and events.
@@ -87,7 +88,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         currentTime = Time.time - startTime;
-
         if (keysCollected >= keys.Length)
         {
             OpenTreasure();
@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CollectCoin()
     {
-        coinsCollected += coinValue;
-        totalCollected = coinsCollected + keysCollected;
+        coinsCollected ++;
+        totalCollected += coinValue;
     }
 
     /// <summary>
@@ -109,8 +109,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CollectKey()
     {
-        keysCollected += keyValue;
-        totalCollected = coinsCollected + keysCollected;
+        keysCollected ++;
+        totalCollected += keyValue;
     }
 
     /// <summary>
@@ -138,7 +138,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-
+            if (!_uiManager)
+                _uiManager = FindObjectOfType<UIManager>();
+            
+            _uiManager.ShowGameOverScreen(true);
         }
     }
 }

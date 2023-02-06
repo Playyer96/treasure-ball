@@ -8,6 +8,7 @@ public class Key : Pickable
     {
         GameManager gameManager = GameManager.Instance;
         gameManager.CollectKey();
+        UIManager.onScoreUpdate();
         
         Destroy(this.gameObject);
     }

@@ -15,11 +15,11 @@ public class PlayerMovementTests
         rigidbody = playerMovement.gameObject.AddComponent<Rigidbody>();
         _camera = new GameObject().AddComponent<Camera>();
         playerMovement.Rb = rigidbody;
-        playerMovement.CurrentFuel = playerMovement.fuelAmount;
+        playerMovement.CurrentFuel = playerMovement.FuelAmount;
         playerMovement.IsUsingJetpack = 1f;
 
-        playerMovement.fuelAmount = 1f;
-        playerMovement.jetpackStartDelay = 1f;
+        playerMovement.FuelAmount = 1f;
+        playerMovement.JetpackStartDelay = 1f;
     }
     
     [TearDown]

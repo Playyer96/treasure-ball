@@ -74,9 +74,17 @@ public class PlayerMovement : MonoBehaviour
         set => _movement = value;
     }
     
-    public float FuelAmount => fuelAmount;
+    public float FuelAmount
+    {
+        get => fuelAmount;
+        set => fuelAmount = value;
+    }
 
-    public float JetpackStartDelay => jetpackStartDelay;
+    public float JetpackStartDelay
+    {
+        get => jetpackStartDelay;
+        set => jetpackStartDelay = value;
+    }
 
     // Delegate for events related to fuel change
     public delegate void OnFuelChange();
