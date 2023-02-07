@@ -10,7 +10,5 @@ public class Treasure : Pickable
     {
         GameManager gameManager = GameManager.Instance;
         gameManager.OpenTreasure();
-        
-        Destroy(this.gameObject);
     }
 }

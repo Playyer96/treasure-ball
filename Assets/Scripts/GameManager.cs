@@ -1,37 +1,24 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// GameManager class handles the game logic and events.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private UIManager _uiManager; // Reference to UIManager component
     [SerializeField] private int coinValue = 10;
-
     [SerializeField] private int keyValue = 50;
-
     [SerializeField] private int totalPoints;
 
-    
-    [SerializeField] private UIManager _uiManager; // Reference to UIManager component
-    
-
+    private bool canOpenTheTreasure = false;
     private bool treasureOpened = false; // Flag to check if the treasure has been opened
-
     private float startTime;
-
     private float currentTime; // Current time elapsed since the start of the game
-    
     private int coinsCollected;
-
     private int keysCollected;
-
     public int totalCollected;
-
     private Coin[] coins; // Array of coins in the scene
-
     private Key[] keys; // Array of keys in the scene
-    
     private Leaderboard _leaderboard; // Reference to the leaderboard component    
     private static GameManager _instance; // Singleton instance of the GameManager class
     
@@ -75,7 +62,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // PlayerPrefs.DeleteAll();
         Time.timeScale = 1;
         
         if (!_uiManager)
@@ -93,23 +79,18 @@ public class GameManager : MonoBehaviour
         currentTime = Time.time - startTime;
         if (keysCollected >= keys.Length)
         {
-            OpenTreasure();
+            canOpenTheTreasure = true;
         }
     }
-
-    /// <summary>
-    /// Increments the count of collected coins by `coinValue`
-    /// </summary>
+    
+    // Increments the count of collected coins by `coinValue`
     public void CollectCoin()
     {
         coinsCollected ++;
         totalCollected += coinValue;
     }
 
-    /// <summary>
-    /// CollectKey is a public function that adds the value of a key (`keyValue`) to the total keys collected (`keysCollected`)
-    /// and updates the total collected (`totalCollected`) by adding the value of the coins collected (`coinsCollected`) and keys collected.
-    /// </summary>
+    // Updates the keys that the player collected
     public void CollectKey()
     {
         keysCollected ++;
@@ -126,6 +107,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OpenTreasure()
     {
+        if(!canOpenTheTreasure) return;
         if (treasureOpened) return;
 
         treasureOpened = true;
